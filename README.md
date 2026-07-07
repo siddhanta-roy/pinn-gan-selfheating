@@ -1,5 +1,7 @@
 # pinn-gan-selfheating
 
+![CI](https://github.com/siddhanta-roy/pinn-gan-selfheating/actions/workflows/ci.yml/badge.svg)
+
 A Physics-Informed Neural Network (PINN) framework for GaN HEMT self-heating,
 built incrementally from a validated 1D heat-equation skeleton.
 
@@ -143,8 +145,9 @@ A few decisions worth flagging for anyone extending this:
 
 ## Author
 
+## Author
+
 Siddhanta Roy — MTS, Device Modeling & Characterization, GlobalFoundries Bangalore.
 Building at the intersection of power semiconductor physics and machine learning.
 
-*This project is part of a broader learning arc: see the companion
-[remote-dev-setup-playbook](https://github.com/siddhanta-roy/remote-dev-setup-playbook guide.*
+*This project is part of a broader learning arc:  see the companion https://github.com/siddhanta-roy/remote-dev-setup-playbook repo for the environment setup guide.*
