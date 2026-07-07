@@ -59,3 +59,19 @@ unset GIT_ASKPASS VSCODE_GIT_ASKPASS_MAIN VSCODE_GIT_ASKPASS_NODE \
 
 Use a GitHub Personal Access Token (`repo` scope) as password on first push;
 credentials cache to `~/.git-credentials` afterward. Secure with `chmod 600 ~/.git-credentials`.
+
+## Requirements files with local version tags (+cpu, +cu*) break CI
+
+`pip freeze` writes `torch==2.12.1+cpu` when PyTorch was installed from
+the dedicated CPU wheel index. Public PyPI has `torch==2.12.1` without
+the suffix — different string, no match. CI's clean environment can't
+resolve the `+cpu` variant.
+
+**Symptom on CI:**
+
+ERROR: Could not find a version that satisfies the requirement torch==X.Y.Z+cpu
+ERROR: No matching distribution found for torch==X.Y.Z+cpu
+
+**Fix — strip the local version tag before committing:**
+```bash
+sed -i 's|torch==X.Y.Z+cpu|torch==X.Y.Z|' requirements.txt
