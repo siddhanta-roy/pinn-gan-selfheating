@@ -13,3 +13,19 @@
 cd /proj/cmc3/cmc_users/sroy5/python_dev/pinn_gan_selfheating
 source .venv/bin/activate
 python src/hello.py
+
+## Enterprise Linux quirk — home dir permissions
+
+GF FC8ENG periodically resets `~` from `drwxr-xr-x` back to `drwxrwxr-x`
+(group-writable), which breaks SSH strict mode and disables key auth.
+
+**Fix (already applied):** `~/.bash_profile` runs the correction on every login:
+
+    chmod g-w,o-w ~ 2>/dev/null
+
+**Verify anytime with:** `ls -ld ~`
+- Should show `drwxr-xr-x`
+- If shows `drwxrwxr-x`, run `chmod g-w ~` and re-test SSH keys
+
+**Note:** `~/.bashrc` is a read-only symlink to GF's shared template.
+Never try to edit it. Use `~/.bash_profile` for personal customizations.
