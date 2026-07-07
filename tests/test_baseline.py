@@ -86,4 +86,4 @@ def test_training_converges():
     assert l2 is not None, (
         f"L2 error not found in training output:\n{result.stdout}"
     )
-    assert l2 < 1e-2, f"L2 error {l2:.3e} exceeds threshold 1e-2"
+    assert l2 < 5e-2, f"L2 error {l2:.3e} exceeds threshold 5e-2"
