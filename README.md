@@ -147,4 +147,4 @@ Siddhanta Roy — MTS, Device Modeling & Characterization, GlobalFoundries Banga
 Building at the intersection of power semiconductor physics and machine learning.
 
 *This project is part of a broader learning arc: see the companion
-[remote-dev-setup-playbook](https://github.com/siddhanta-roy/remote-dev-environment-setup guide.*
+[remote-dev-setup-playbook](https://github.com/siddhanta-roy/remote-dev-setup-playbook guide.*
