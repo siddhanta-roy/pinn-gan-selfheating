@@ -17,6 +17,10 @@ residual, Dirichlet BCs, and the initial condition `T(x, 0) = sin(πx)`.
 
 ![PINN first run](docs/pinn_first_run.png)
 
+
+> 📺 **See the transient PINN animation** (GitHub strips the interactive player; use nbviewer):
+> [nbviewer.org/.../02_transient_heatta-roy/pinn-gan-selfheating/blob/main/notebooks/02_transient_heat.ipynb]
+
 *Left: PINN prediction (dashed red) overlaid on analytical sin(πx) (solid black).
 Right: log-scale loss history showing PDE and BC components.*
 
@@ -101,7 +105,7 @@ pinn-gan-selfheating/
 │   └── train.py          Adam training loop + diagnostics
 ├── notebooks/
 │   ├── 01_first_experiment.ipynb   1D steady heat: thin driver + residual diagnostic
-│   └── 02_transient_heat.ipynb     1D transient heat: trainer + animated T(x,t)
+│   └── 02_transient_heat.ipynb     1D transient heat: trainer + animated T(x,t) [view on nbviewer]
 ├── docs/
 │   └── pinn_first_run.png          Milestone 1 result plot
 ├── outputs/              (gitignored — generated at runtime)
@@ -145,6 +149,13 @@ A few decisions worth flagging for anyone extending this:
   PDE/BC/IC points are drawn fresh each step from `[0,1] × [0, t_final]`.
   This acts as implicit data augmentation and avoids overfitting to any
   fixed grid.
+
+
+- **Interactive animation via nbviewer.** GitHub's notebook renderer strips
+  the JavaScript that powers `matplotlib.animation.FuncAnimation.to_jshtml()`
+  output, so the transient T(x,t) player only appears when the notebook is
+  opened in Jupyter locally or viewed on https://nbviewer.org.
+  Static loss curves and snapshot plots render fine on GitHub itself.
 
 - **Fixed seed = 42.** Runs are bit-for-bit reproducible. Change with intent.
 
