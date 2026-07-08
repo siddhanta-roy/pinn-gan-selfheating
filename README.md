@@ -5,11 +5,17 @@
 A Physics-Informed Neural Network (PINN) framework for GaN HEMT self-heating,
 built incrementally from a validated 1D heat-equation skeleton.
 
-**Current milestone:** 1D steady heat equation solved with relative L2 error
-`3.23e-05` vs. spec of `1e-2` — a working autograd + PDE-residual + boundary-loss
-pipeline in ~3500 parameters, converging in 27 seconds on CPU.
 
-docs/pinn_first_run.png
+**Current milestone:** 1D transient heat equation solved on the (x, t) strip,
+extending the day-1 steady-state skeleton. The 2-input MLP is trained with
+random spatio-temporal collocation, and the composite loss balances the PDE
+residual, Dirichlet BCs, and the initial condition `T(x, 0) = sin(πx)`.
+
+**Previously:** 1D steady heat equation with relative L2 error `3.23e-05`
+(spec: `1e-2`), converging in ~27 s on CPU.
+
+
+![PINN first run](docs/pinn_first_run.png)
 
 *Left: PINN prediction (dashed red) overlaid on analytical sin(πx) (solid black).
 Right: log-scale loss history showing PDE and BC components.*
@@ -43,11 +49,12 @@ activation, the boundary-loss weighting, the double-differentiation via
 | # | Extension | New concept | Status |
 |---|---|---|---|
 | 1 | 1D steady, uniform `k`, analytical BC | Autograd for `d²T/dx²`, soft BC via loss weighting | ✅ Done |
-| 2 | 1D transient (`∂T/∂t = α T''`) | Time as an input dimension; initial condition | ⏭️ Next |
-| 3 | Temperature-dependent `k(T) = k₀(300/T)^1.4` | Nonlinear PDE; log-transform tricks | ⏭️ |
+| 2 | 1D transient (`∂T/∂t = α T''`) | Time as an input dimension; initial condition as a soft loss; causality-aware IC weighting | ✅ Done |
+| 3 | Temperature-dependent `k(T) = k₀(300/T)^1.4` | Nonlinear PDE; log-transform tricks | ⏭️ Next |
 | 4 | 2D Poisson (`∇²T = Q(x,y)`) | Mesh-free 2D collocation; adaptive sampling (RAR) | ⏭️ |
 | 5 | Realistic Joule heating `Q(x,y)` | Coupling to device electrostatics | ⏭️ |
 | 6 | Full HEMT stack (substrate + buffer + channel) | Material interfaces; thermal boundary resistance | ⏭️ |
+
 
 ---
 
@@ -93,7 +100,8 @@ pinn-gan-selfheating/
 │   ├── pde_loss.py       PDE residual + boundary loss via autograd
 │   └── train.py          Adam training loop + diagnostics
 ├── notebooks/
-│   └── 01_first_experiment.ipynb   Thin driver + residual diagnostic
+│   ├── 01_first_experiment.ipynb   1D steady heat: thin driver + residual diagnostic
+│   └── 02_transient_heat.ipynb     1D transient heat: trainer + animated T(x,t)
 ├── docs/
 │   └── pinn_first_run.png          Milestone 1 result plot
 ├── outputs/              (gitignored — generated at runtime)
@@ -127,6 +135,17 @@ A few decisions worth flagging for anyone extending this:
   differentiation across different variable types (`x` and `θ`), autograd
   handles it transparently, but only if the derivative graph is preserved.
 
+- **Initial condition as a soft loss.** For the transient problem, `T(x, 0) = sin(πx)`
+  is enforced by an MSE term on random `t=0` samples, weighted 10× the PDE
+  residual. This anchors the network at `t=0` before it fits the interior —
+  a lightweight fix for the standard "causality violation" failure mode in
+  transient PINNs.
+
+- **Random collocation, re-sampled every epoch.** For the transient problem,
+  PDE/BC/IC points are drawn fresh each step from `[0,1] × [0, t_final]`.
+  This acts as implicit data augmentation and avoids overfitting to any
+  fixed grid.
+
 - **Fixed seed = 42.** Runs are bit-for-bit reproducible. Change with intent.
 
 ---
@@ -143,7 +162,6 @@ A few decisions worth flagging for anyone extending this:
 
 ---
 
-## Author
 
 ## Author
 
