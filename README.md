@@ -17,14 +17,15 @@ residual, Dirichlet BCs, and the initial condition `T(x, 0) = sin(πx)`.
 
 ![PINN first run](docs/pinn_first_run.png)
 
+*Left: PINN prediction (dashed red) overlaid on analytical sin(πx) (solid black).
+Right: log-scale loss history showing PDE and BC components.*
+
+
 
 
 > 📺 **See the transient PINN animation** (GitHub strips the interactive player; use nbviewer):
 > https://nbviewer.org/github/siddhanta-roy/pinn-gan-selfheating/blob/main/notebooks/02_transient_heat.ipynb
 
-
-*Left: PINN prediction (dashed red) overlaid on analytical sin(πx) (solid black).
-Right: log-scale loss history showing PDE and BC components.*
 
 ---
 
